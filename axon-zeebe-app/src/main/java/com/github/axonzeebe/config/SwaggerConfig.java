@@ -16,7 +16,7 @@ public class SwaggerConfig {
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(Predicates.not(RequestHandlerSelectors.basePackage("org.springframework")))
+                .apis(RequestHandlerSelectors.basePackage("com.github.axonzeebe.api"))
                 .paths(PathSelectors.any())
                 .build();
     }

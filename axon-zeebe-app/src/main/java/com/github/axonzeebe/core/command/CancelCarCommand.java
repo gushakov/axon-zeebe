@@ -1,13 +1,10 @@
 package com.github.axonzeebe.core.command;
 
-import lombok.AllArgsConstructor;
 import lombok.Value;
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
 @Value
-public class BookCarCommand {
-
+public class CancelCarCommand {
     @TargetAggregateIdentifier
     private final String tripId;
-
 }
