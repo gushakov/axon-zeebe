@@ -32,14 +32,14 @@ public class TripBookingWorkflow extends AbstractWorkflow {
     // appropriate commands to the trip booking aggregate
     @ZeebeWorker(type = "bookCar")
     public void handleBookCarJob(final JobClient client, final ActivatedJob job) {
-        handWorkflowJob(new BookCarCommand((String) job.getVariablesAsMap().get(TRIP_ID)),
+        handleWorkflowJob(new BookCarCommand((String) job.getVariablesAsMap().get(TRIP_ID)),
                 client, job);
 
     }
 
     @ZeebeWorker(type = "bookHotel")
     public void handleBookHotelJob(final JobClient client, final ActivatedJob job) {
-        handWorkflowJob(new BookHotelCommand((String) job.getVariablesAsMap().get(TRIP_ID)),
+        handleWorkflowJob(new BookHotelCommand((String) job.getVariablesAsMap().get(TRIP_ID)),
                 client, job);
     }
 

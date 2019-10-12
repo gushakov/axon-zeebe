@@ -49,7 +49,7 @@ abstract class AbstractWorkflow {
                 .send();
     }
 
-    void handWorkflowJob(Object command, final JobClient client, final ActivatedJob job) {
+    void handleWorkflowJob(Object command, final JobClient client, final ActivatedJob job) {
         log.debug("[Workflow] Handle job of type {} with key {} and variables {}",
                 job.getType(), job.getKey(), job.getVariables());
         Mono.fromFuture(commandGateway
