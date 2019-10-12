@@ -2,7 +2,7 @@ Axon and Zeebe
 ===
 
 Proof-of-concept integration of [Zeebe](https://docs.zeebe.io/introduction/quickstart.html) workflow
-engine from Camunda with Axon CQSRS engine.
+engine from Camunda with Axon CQRS engine.
 
 Testing and running
 ---

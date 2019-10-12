@@ -1,6 +1,5 @@
 package com.github.axonzeebe.core.command;
 
-import lombok.AllArgsConstructor;
 import lombok.Value;
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
