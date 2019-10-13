@@ -5,6 +5,7 @@ import io.zeebe.client.api.worker.JobClient;
 import io.zeebe.spring.client.ZeebeClientLifecycle;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.gateway.CommandGateway;
+import org.axonframework.eventhandling.EventHandler;
 import reactor.core.publisher.Mono;
 
 import java.util.Collections;
@@ -21,6 +22,9 @@ abstract class AbstractWorkflow {
         this.zeebeClient = zeebeClient;
     }
 
+    // process domain events from the trip booking aggregate by forwarding
+    // them as messages to the workflow engine
+    @EventHandler
     void processWorkflowEvent(WorkflowEvent workflowEvent) {
         // start new instance of the workflow when receiving trip booking started event from the aggregate
         if (workflowEvent.isStartingEvent()) {
@@ -45,11 +49,11 @@ abstract class AbstractWorkflow {
         // send message to workflow engine
         zeebeClient.newPublishMessageCommand()
                 .messageName(workflowEvent.getClass().getSimpleName())
-                .correlationKey(workflowEvent.getCorrelationKey())
+                .correlationKey(workflowEvent.getCorrelationValue())
                 .send();
     }
 
-    void handleWorkflowJob(Object command, final JobClient client, final ActivatedJob job) {
+    protected void handleWorkflowJob(Object command, final JobClient client, final ActivatedJob job) {
         log.debug("[Workflow] Handle job of type {} with key {} and variables {}",
                 job.getType(), job.getKey(), job.getVariables());
         Mono.fromFuture(commandGateway

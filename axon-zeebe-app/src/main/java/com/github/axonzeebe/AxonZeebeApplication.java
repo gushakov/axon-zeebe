@@ -8,12 +8,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration;
 
 @SpringBootApplication(exclude = {ErrorMvcAutoConfiguration.class,
-		JpaEventStoreAutoConfiguration.class, JdbcAutoConfiguration.class})
+        JpaEventStoreAutoConfiguration.class, JdbcAutoConfiguration.class})
 @EnableZeebeClient
 public class AxonZeebeApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(AxonZeebeApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(AxonZeebeApplication.class, args);
+    }
 
 }
