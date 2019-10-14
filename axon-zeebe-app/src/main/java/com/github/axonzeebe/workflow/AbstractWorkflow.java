@@ -22,16 +22,16 @@ abstract class AbstractWorkflow {
         this.zeebeClient = zeebeClient;
     }
 
-    // process domain events from the trip booking aggregate by forwarding
-    // them as messages to the workflow engine
+    // Processes generic workflow event by dispatching corresponding messages
+    // to Zeebe
     @EventHandler
     void processWorkflowEvent(WorkflowEvent workflowEvent) {
-        // start new instance of the workflow when receiving trip booking started event from the aggregate
-        if (workflowEvent.isStartingEvent()) {
+        // Start new instance of the workflow if needed
+        if (workflowEvent.isWorkflowStartingEvent()) {
             log.debug("[Workflow] Starting workflow instance, event: {}", workflowEvent);
             startWorkflowInstance(workflowEvent);
         } else {
-            // else just forward this event to the workflow engine
+            // else just forward this event to Zeebe
             log.debug("[Workflow] Processing event: {}", workflowEvent);
             sendMessageToWorkflowEngine(workflowEvent);
         }
@@ -46,13 +46,14 @@ abstract class AbstractWorkflow {
     }
 
     private void sendMessageToWorkflowEngine(final WorkflowEvent workflowEvent) {
-        // send message to workflow engine
         zeebeClient.newPublishMessageCommand()
-                .messageName(workflowEvent.getClass().getSimpleName())
+                .messageName(workflowEvent.getWorkflowMessageName())
                 .correlationKey(workflowEvent.getCorrelationValue())
                 .send();
     }
 
+    // Dispatches command argument to the command gateway to perform
+    // workflow jobs (in aggregates).
     protected void handleWorkflowJob(Object command, final JobClient client, final ActivatedJob job) {
         log.debug("[Workflow] Handle job of type {} with key {} and variables {}",
                 job.getType(), job.getKey(), job.getVariables());

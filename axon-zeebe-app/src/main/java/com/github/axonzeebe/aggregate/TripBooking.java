@@ -1,7 +1,14 @@
 package com.github.axonzeebe.aggregate;
 
-import com.github.axonzeebe.core.command.*;
-import com.github.axonzeebe.core.event.*;
+import com.github.axonzeebe.core.command.BookCarCommand;
+import com.github.axonzeebe.core.command.BookHotelCommand;
+import com.github.axonzeebe.core.command.CancelCarCommand;
+import com.github.axonzeebe.core.command.CancelHotelCommand;
+import com.github.axonzeebe.core.event.CarBookedEvent;
+import com.github.axonzeebe.core.event.CarCancelledEvent;
+import com.github.axonzeebe.core.event.HotelBookedEvent;
+import com.github.axonzeebe.core.event.HotelCancelledEvent;
+import com.github.axonzeebe.workflow.WorkflowCommand;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.CommandHandler;
@@ -30,51 +37,59 @@ public class TripBooking {
     public TripBooking() {
     }
 
+    // Handle generic workflow command message
     @CommandHandler
-    public TripBooking(RequestTripBookingCommand command){
-        log.debug("[Aggregate] Process new trip command: {}", command);
-        AggregateLifecycle.apply(new TripBookingRequestedEvent(command.getTripId()));
+    public TripBooking(WorkflowCommand command) {
+        log.debug("[Aggregate][Workflow Command] Process workflow command: {}", command);
+        AggregateLifecycle.apply(command.toWorkflowEvent());
     }
 
     @CommandHandler
-    public void handle(RequestCarBookingCommand command){
-        log.debug("[Aggregate] Process request for car booking: {}", command);
-        AggregateLifecycle.apply(new CarBookingRequestedEvent(command.getTripId()));
-    }
-
-    @CommandHandler
-    public void handle(BookCarCommand command){
-        log.debug("[Aggregate] Confirm car booking: {}", command);
+    public void handle(BookCarCommand command) {
+        log.debug("[Aggregate][Command] Confirm car booking: {}", command);
         AggregateLifecycle.apply(new CarBookedEvent(command.getTripId()));
     }
 
     @CommandHandler
-    public void handle(RequestHotelBookingCommand command){
-        log.debug("[Aggregate] Process request for hotel booking: {}", command);
-        AggregateLifecycle.apply(new HotelBookingRequestedEvent(command.getTripId()));
-    }
-
-    @CommandHandler
-    public void handle(BookHotelCommand command){
-        log.debug("[Aggregate] Confirm hotel booking: {}", command);
+    public void handle(BookHotelCommand command) {
+        log.debug("[Aggregate][Command] Confirm hotel booking: {}", command);
         AggregateLifecycle.apply(new HotelBookedEvent(command.getTripId()));
     }
 
-    @EventHandler
-    public void on(TripBookingRequestedEvent event){
-        log.debug("[Aggregate] Process start trip event: {}", event);
-        this.id = event.getTripId();
+    @CommandHandler
+    public void handle(CancelCarCommand command) {
+        log.debug("[Aggregate][Command] Cancel car: {}", command);
+        AggregateLifecycle.apply(new CarCancelledEvent(command.getTripId()));
+    }
+
+    @CommandHandler
+    public void handle(CancelHotelCommand command) {
+        log.debug("[Aggregate][Command] Cancel hotel: {}", command);
+        AggregateLifecycle.apply(new HotelCancelledEvent(command.getTripId()));
     }
 
     @EventHandler
-    public void on(CarBookedEvent event){
-        log.debug("[Aggregate] Register car booking: {}", event);
+    public void on(CarBookedEvent event) {
+        log.debug("[Aggregate][Event] Register car booking: {}", event);
         this.carBooked = true;
     }
 
     @EventHandler
-    public void on(HotelBookedEvent event){
-        log.debug("[Aggregate] Register hotel booking: {}", event);
+    public void on(HotelBookedEvent event) {
+        log.debug("[Aggregate][Event] Register hotel booking: {}", event);
         this.hotelBooked = true;
     }
+
+    @EventHandler
+    public void on(CarCancelledEvent event) {
+        log.debug("[Aggregate][Event] Register car cancellation: {}", event);
+        this.carBooked = false;
+    }
+
+    @EventHandler
+    public void on(HotelCancelledEvent event) {
+        log.debug("[Aggregate][Event] Register hotel cancellation: {}", event);
+        this.hotelBooked = false;
+    }
+
 }

@@ -1,10 +1,8 @@
 package com.github.axonzeebe.core.event;
 
-import lombok.EqualsAndHashCode;
 import lombok.Value;
 
-@EqualsAndHashCode(callSuper = true)
 @Value
-public class HotelCancelledEvent extends AbstractTripBookingWorkflowEvent {
+public class HotelCancelledEvent {
     private final String tripId;
 }

@@ -2,9 +2,11 @@ package com.github.axonzeebe.workflow;
 
 public interface WorkflowEvent {
 
-    default boolean isStartingEvent() {
+    default boolean isWorkflowStartingEvent() {
         return false;
     }
+
+    String getWorkflowMessageName();
 
     String getProcessId();
 

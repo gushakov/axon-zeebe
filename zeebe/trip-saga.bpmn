@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0uueh20" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Zeebe Modeler" exporterVersion="0.7.0">
   <bpmn:process id="TripBookingProcess" name="TripBookingProcess" isExecutable="true">
-    <bpmn:startEvent id="StartEvent_1j6zk51">
+    <bpmn:startEvent id="StartEvent_1j6zk51" name="StartTripBooking">
       <bpmn:outgoing>SequenceFlow_0otfoj0</bpmn:outgoing>
     </bpmn:startEvent>
-    <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_01fx544" name="CarBookingRequestedEvent">
+    <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_01fx544" name="BookCar">
       <bpmn:incoming>SequenceFlow_0rt0jl9</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1eecb4l</bpmn:outgoing>
       <bpmn:messageEventDefinition messageRef="Message_11a56a5" />
@@ -24,7 +24,7 @@
       <bpmn:outgoing>SequenceFlow_1bg5sn8</bpmn:outgoing>
     </bpmn:eventBasedGateway>
     <bpmn:sequenceFlow id="SequenceFlow_0rt0jl9" sourceRef="ExclusiveGateway_02k6bgu" targetRef="IntermediateCatchEvent_01fx544" />
-    <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_0hwh6o0" name="TripBookingCancelledEvent">
+    <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_0hwh6o0" name="CancelTrip">
       <bpmn:incoming>SequenceFlow_1bg5sn8</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1nn20sg</bpmn:outgoing>
       <bpmn:messageEventDefinition messageRef="Message_1d34ten" />
@@ -41,12 +41,12 @@
       <bpmn:outgoing>SequenceFlow_1wtq8y7</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_071wacg</bpmn:outgoing>
     </bpmn:eventBasedGateway>
-    <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_12nc732" name="HotelBookingRequestedEvent">
+    <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_12nc732" name="BookHotel">
       <bpmn:incoming>SequenceFlow_071wacg</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_015enxz</bpmn:outgoing>
       <bpmn:messageEventDefinition messageRef="Message_0uzscin" />
     </bpmn:intermediateCatchEvent>
-    <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1vj7lir" name="CarCancelledEvent">
+    <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1vj7lir" name="CancelCar">
       <bpmn:incoming>SequenceFlow_1wtq8y7</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_182gjoj</bpmn:outgoing>
       <bpmn:messageEventDefinition messageRef="Message_0r157ir" />
@@ -77,13 +77,13 @@
       <bpmn:outgoing>SequenceFlow_050ecct</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_0b36dmv</bpmn:outgoing>
     </bpmn:eventBasedGateway>
-    <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1mattg4" name="FlightBookingRequestedEvent">
+    <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1mattg4" name="BookFlight">
       <bpmn:incoming>SequenceFlow_050ecct</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_11kh8gd</bpmn:outgoing>
       <bpmn:messageEventDefinition messageRef="Message_17gtuiu" />
     </bpmn:intermediateCatchEvent>
     <bpmn:sequenceFlow id="SequenceFlow_050ecct" sourceRef="ExclusiveGateway_006g6l1" targetRef="IntermediateCatchEvent_1mattg4" />
-    <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1prrqsr" name="HotelCancelledEvent&#10;&#10;">
+    <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1prrqsr" name="CancelHotel&#10;&#10;">
       <bpmn:incoming>SequenceFlow_0b36dmv</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0u13vss</bpmn:outgoing>
       <bpmn:messageEventDefinition messageRef="Message_0hm3vpy" />
@@ -103,32 +103,32 @@
     <bpmn:sequenceFlow id="SequenceFlow_0u13vss" sourceRef="IntermediateCatchEvent_1prrqsr" targetRef="ServiceTask_1tj9xvg" />
     <bpmn:sequenceFlow id="SequenceFlow_1cysmwj" sourceRef="ServiceTask_1tj9xvg" targetRef="ServiceTask_0tx322h" />
   </bpmn:process>
-  <bpmn:message id="Message_11a56a5" name="CarBookingRequestedEvent">
+  <bpmn:message id="Message_11a56a5" name="BookCar">
     <bpmn:extensionElements>
       <zeebe:subscription correlationKey="tripId" />
     </bpmn:extensionElements>
   </bpmn:message>
-  <bpmn:message id="Message_1d34ten" name="TripBookingCancelledEvent">
+  <bpmn:message id="Message_1d34ten" name="CancelTrip">
     <bpmn:extensionElements>
       <zeebe:subscription correlationKey="tripId" />
     </bpmn:extensionElements>
   </bpmn:message>
-  <bpmn:message id="Message_0r157ir" name="CarCancelledEvent">
+  <bpmn:message id="Message_0r157ir" name="CancelCar">
     <bpmn:extensionElements>
       <zeebe:subscription correlationKey="tripId" />
     </bpmn:extensionElements>
   </bpmn:message>
-  <bpmn:message id="Message_0uzscin" name="HotelBookingRequestedEvent">
+  <bpmn:message id="Message_0uzscin" name="BookHotel">
     <bpmn:extensionElements>
       <zeebe:subscription correlationKey="tripId" />
     </bpmn:extensionElements>
   </bpmn:message>
-  <bpmn:message id="Message_0hm3vpy" name="HotelCancelledEvent">
+  <bpmn:message id="Message_0hm3vpy" name="CancelHotel">
     <bpmn:extensionElements>
       <zeebe:subscription correlationKey="tripId" />
     </bpmn:extensionElements>
   </bpmn:message>
-  <bpmn:message id="Message_17gtuiu" name="FlightBookingRequestedEvent">
+  <bpmn:message id="Message_17gtuiu" name="BookFlight">
     <bpmn:extensionElements>
       <zeebe:subscription correlationKey="tripId" />
     </bpmn:extensionElements>
@@ -138,13 +138,13 @@
       <bpmndi:BPMNShape id="StartEvent_1j6zk51_di" bpmnElement="StartEvent_1j6zk51">
         <dc:Bounds x="152" y="102" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="-271" y="5" width="82" height="27" />
+          <dc:Bounds x="130" y="145" width="82" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="IntermediateCatchEvent_01fx544_di" bpmnElement="IntermediateCatchEvent_01fx544">
         <dc:Bounds x="372" y="102" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="358" y="145" width="90" height="27" />
+          <dc:Bounds x="382" y="145" width="43" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ServiceTask_0nd3z56_di" bpmnElement="ServiceTask_0nd3z56">
@@ -168,7 +168,7 @@
       <bpmndi:BPMNShape id="IntermediateCatchEvent_0hwh6o0_di" bpmnElement="IntermediateCatchEvent_0hwh6o0">
         <dc:Bounds x="372" y="212" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="349" y="255" width="84" height="27" />
+          <dc:Bounds x="364" y="255" width="53" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_1bg5sn8_di" bpmnElement="SequenceFlow_1bg5sn8">
@@ -193,13 +193,13 @@
       <bpmndi:BPMNShape id="IntermediateCatchEvent_12nc732_di" bpmnElement="IntermediateCatchEvent_12nc732">
         <dc:Bounds x="952" y="102" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="930" y="145" width="86" height="27" />
+          <dc:Bounds x="948" y="145" width="51" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="IntermediateCatchEvent_1vj7lir_di" bpmnElement="IntermediateCatchEvent_1vj7lir">
         <dc:Bounds x="782" y="212" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="758" y="255" width="86" height="27" />
+          <dc:Bounds x="778" y="255" width="53" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_1wtq8y7_di" bpmnElement="SequenceFlow_1wtq8y7">
@@ -238,7 +238,7 @@
       <bpmndi:BPMNShape id="IntermediateCatchEvent_1mattg4_di" bpmnElement="IntermediateCatchEvent_1mattg4">
         <dc:Bounds x="1442" y="102" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1421" y="145" width="81" height="27" />
+          <dc:Bounds x="1436" y="145" width="52" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_050ecct_di" bpmnElement="SequenceFlow_050ecct">
@@ -248,7 +248,7 @@
       <bpmndi:BPMNShape id="IntermediateCatchEvent_1prrqsr_di" bpmnElement="IntermediateCatchEvent_1prrqsr">
         <dc:Bounds x="1312" y="212" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1286" y="257.5" width="88" height="53" />
+          <dc:Bounds x="1301" y="258" width="60" height="40" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0b36dmv_di" bpmnElement="SequenceFlow_0b36dmv">

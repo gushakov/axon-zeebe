@@ -10,28 +10,27 @@ import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.stereotype.Component;
 
+import static com.github.axonzeebe.workflow.TripBookingConstants.CORRELATION_KEY;
+
 @Component
 @Slf4j
 public class TripBookingWorkflow extends AbstractWorkflow {
-
-    private final static String TRIP_ID = "tripId";
 
     public TripBookingWorkflow(CommandGateway commandGateway, ZeebeClientLifecycle zeebeClient) {
         super(commandGateway, zeebeClient);
     }
 
-    // handle workflow jobs assigned by the workflow engine by sending
-    // appropriate commands to the trip booking aggregate
+    // Handle workflow jobs
 
     @ZeebeWorker(type = "bookCar")
     public void handleBookCarJob(final JobClient client, final ActivatedJob job) {
-        handleWorkflowJob(new BookCarCommand((String) job.getVariablesAsMap().get(TRIP_ID)),
+        handleWorkflowJob(new BookCarCommand((String) job.getVariablesAsMap().get(CORRELATION_KEY)),
                 client, job);
     }
 
     @ZeebeWorker(type = "bookHotel")
     public void handleBookHotelJob(final JobClient client, final ActivatedJob job) {
-        handleWorkflowJob(new BookHotelCommand((String) job.getVariablesAsMap().get(TRIP_ID)),
+        handleWorkflowJob(new BookHotelCommand((String) job.getVariablesAsMap().get(CORRELATION_KEY)),
                 client, job);
     }
 }

@@ -5,8 +5,6 @@ import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
 @Value
 public class BookHotelCommand {
-
     @TargetAggregateIdentifier
     private final String tripId;
-
 }
