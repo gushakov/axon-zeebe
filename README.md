@@ -2,12 +2,15 @@ Axon and Zeebe
 ===
 
 Proof-of-concept integration of [Zeebe](https://docs.zeebe.io/introduction/quickstart.html) workflow
-engine from Camunda with Axon CQRS engine.
+engine from Camunda with [Axon](https://axoniq.io/) CQRS engine.
 
-Testing and running
+Running
 ---
 
-Standard Docker setup.
+Standard Docker setup. Run `docker-compose up` and wait until the workflow is deployed.
+
+- http://localhost:8080/views/workflows should have the deployed workflow in the Zeebe's simple monitor
+- http://localhost:8081/swagger-ui.html should have Swagger API (work in progress...)
 
 Copyright disclaimer
 ---

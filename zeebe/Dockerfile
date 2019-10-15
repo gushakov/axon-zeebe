@@ -18,3 +18,17 @@ RUN mvn dependency:copy -B \
 FROM camunda/zeebe:latest
 
 COPY --from=downloader /tmp/zeebe-hazelcast-exporter.jar /usr/local/zeebe/lib/zeebe-hazelcast-exporter.jar
+
+COPY ./trip-saga.bpmn /
+
+COPY ./zbctl /
+RUN chmod +x /zbctl
+
+COPY ./docker-entrypoint.sh /
+RUN chmod +x /docker-entrypoint.sh
+
+# from https://github.com/powerman/dockerize
+
+RUN curl -sfL https://github.com/powerman/dockerize/releases/download/v0.10.0/dockerize-`uname -s`-`uname -m` | install /dev/stdin /usr/local/bin/dockerize
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
