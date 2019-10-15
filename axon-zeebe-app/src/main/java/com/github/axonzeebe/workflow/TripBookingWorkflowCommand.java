@@ -1,8 +1,5 @@
 package com.github.axonzeebe.workflow;
 
-import com.github.axonzeebe.workflow.WorkflowCommand;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
