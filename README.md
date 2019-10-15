@@ -7,10 +7,13 @@ engine from Camunda with [Axon](https://axoniq.io/) CQRS engine.
 Running
 ---
 
-Standard Docker setup. Run `docker-compose up` and wait until the workflow is deployed.
+Build with `mvn package`.
+Run `docker-compose build`.
+Run `docker-compose up` and wait until the workflow is deployed.
 
 - http://localhost:8080/views/workflows should have the deployed workflow in the Zeebe's simple monitor
-- http://localhost:8081/swagger-ui.html should have Swagger API (work in progress...)
+- http://localhost:8081/swagger-ui.html should have Swagger API
+- http://localhost:8081/h2-console should have access to H2 database
 
 Copyright disclaimer
 ---

@@ -5,7 +5,8 @@ version: '3.7'
 services: 
   zeebe:
     container_name: zeebe
-    build: ./zeebe
+    build:
+     context: ./zeebe
     environment:
         - ZEEBE_LOG_LEVEL=debug
     ports:
@@ -22,5 +23,16 @@ services:
       - io.zeebe.monitor.hazelcast.connection=zeebe:5701
     ports:
       - "8080:8080"
+    depends_on:
+        - zeebe
+
+  app:
+    container_name: app
+    build:
+      context: ./axon-zeebe-app
+    environment:
+      - ZEEBE_BROKER_HOST=zeebe
+    ports:
+      - "8081:8081"
     depends_on:
         - zeebe

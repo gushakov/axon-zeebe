@@ -17,7 +17,7 @@
 
 sleep 30s
 
-dockerize -wait http://monitor:8080
+dockerize -wait http://monitor:8080 -timeout 60s
 
 /zbctl deploy /trip-saga.bpmn &
 
