@@ -55,7 +55,7 @@ abstract class AbstractWorkflow {
     // Dispatches command argument to the command gateway to perform
     // workflow jobs (in aggregates).
     protected void handleWorkflowJob(Object command, final JobClient client, final ActivatedJob job) {
-        log.debug("[Workflow] Handle job of type {} with key {} and variables {}",
+        log.debug("[Workflow][Job] Handle job of type {} with key {} and variables {}",
                 job.getType(), job.getKey(), job.getVariables());
         Mono.fromFuture(commandGateway
                 .send(command))

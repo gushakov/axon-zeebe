@@ -30,7 +30,7 @@
       <bpmn:messageEventDefinition messageRef="Message_1d34ten" />
     </bpmn:intermediateCatchEvent>
     <bpmn:sequenceFlow id="SequenceFlow_1bg5sn8" sourceRef="ExclusiveGateway_02k6bgu" targetRef="IntermediateCatchEvent_0hwh6o0" />
-    <bpmn:endEvent id="EndEvent_107gkee">
+    <bpmn:endEvent id="EndEvent_107gkee" name="CancelTripBooking">
       <bpmn:incoming>SequenceFlow_1nn20sg</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_0s0186l</bpmn:incoming>
     </bpmn:endEvent>
@@ -79,7 +79,7 @@
     </bpmn:eventBasedGateway>
     <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1mattg4" name="BookFlight">
       <bpmn:incoming>SequenceFlow_050ecct</bpmn:incoming>
-      <bpmn:outgoing>SequenceFlow_11kh8gd</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0f60caa</bpmn:outgoing>
       <bpmn:messageEventDefinition messageRef="Message_17gtuiu" />
     </bpmn:intermediateCatchEvent>
     <bpmn:sequenceFlow id="SequenceFlow_050ecct" sourceRef="ExclusiveGateway_006g6l1" targetRef="IntermediateCatchEvent_1mattg4" />
@@ -89,19 +89,47 @@
       <bpmn:messageEventDefinition messageRef="Message_0hm3vpy" />
     </bpmn:intermediateCatchEvent>
     <bpmn:sequenceFlow id="SequenceFlow_0b36dmv" sourceRef="ExclusiveGateway_006g6l1" targetRef="IntermediateCatchEvent_1prrqsr" />
-    <bpmn:endEvent id="EndEvent_1638qok">
-      <bpmn:incoming>SequenceFlow_11kh8gd</bpmn:incoming>
-    </bpmn:endEvent>
-    <bpmn:sequenceFlow id="SequenceFlow_11kh8gd" sourceRef="IntermediateCatchEvent_1mattg4" targetRef="EndEvent_1638qok" />
     <bpmn:serviceTask id="ServiceTask_1tj9xvg" name="cancelHotel">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="cancelHotel" />
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_0u13vss</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_1sqyfds</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1cysmwj</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_0u13vss" sourceRef="IntermediateCatchEvent_1prrqsr" targetRef="ServiceTask_1tj9xvg" />
     <bpmn:sequenceFlow id="SequenceFlow_1cysmwj" sourceRef="ServiceTask_1tj9xvg" targetRef="ServiceTask_0tx322h" />
+    <bpmn:serviceTask id="ServiceTask_15mxn9r" name="bookFlight">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="bookFlight" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>SequenceFlow_0f60caa</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1d1cpjk</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="SequenceFlow_0f60caa" sourceRef="IntermediateCatchEvent_1mattg4" targetRef="ServiceTask_15mxn9r" />
+    <bpmn:sequenceFlow id="SequenceFlow_1d1cpjk" sourceRef="ServiceTask_15mxn9r" targetRef="ExclusiveGateway_0vsf3qh" />
+    <bpmn:eventBasedGateway id="ExclusiveGateway_0vsf3qh">
+      <bpmn:incoming>SequenceFlow_1d1cpjk</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0gnvma1</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_1trhmuu</bpmn:outgoing>
+    </bpmn:eventBasedGateway>
+    <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1fha6fu" name="ConfirmTripBooking">
+      <bpmn:incoming>SequenceFlow_0gnvma1</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_03demsq</bpmn:outgoing>
+      <bpmn:messageEventDefinition messageRef="Message_0blhfj0" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0gnvma1" sourceRef="ExclusiveGateway_0vsf3qh" targetRef="IntermediateCatchEvent_1fha6fu" />
+    <bpmn:endEvent id="EndEvent_0nrshdx" name="FinishTripBooking">
+      <bpmn:incoming>SequenceFlow_03demsq</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_03demsq" sourceRef="IntermediateCatchEvent_1fha6fu" targetRef="EndEvent_0nrshdx" />
+    <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_0kjjbpq" name="CancelFlight">
+      <bpmn:incoming>SequenceFlow_1trhmuu</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1sqyfds</bpmn:outgoing>
+      <bpmn:messageEventDefinition messageRef="Message_1jbo8sw" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_1trhmuu" sourceRef="ExclusiveGateway_0vsf3qh" targetRef="IntermediateCatchEvent_0kjjbpq" />
+    <bpmn:sequenceFlow id="SequenceFlow_1sqyfds" sourceRef="IntermediateCatchEvent_0kjjbpq" targetRef="ServiceTask_1tj9xvg" />
   </bpmn:process>
   <bpmn:message id="Message_11a56a5" name="BookCar">
     <bpmn:extensionElements>
@@ -129,6 +157,16 @@
     </bpmn:extensionElements>
   </bpmn:message>
   <bpmn:message id="Message_17gtuiu" name="BookFlight">
+    <bpmn:extensionElements>
+      <zeebe:subscription correlationKey="tripId" />
+    </bpmn:extensionElements>
+  </bpmn:message>
+  <bpmn:message id="Message_0blhfj0" name="ConfirmTripBooking">
+    <bpmn:extensionElements>
+      <zeebe:subscription correlationKey="tripId" />
+    </bpmn:extensionElements>
+  </bpmn:message>
+  <bpmn:message id="Message_1jbo8sw" name="CancelFlight">
     <bpmn:extensionElements>
       <zeebe:subscription correlationKey="tripId" />
     </bpmn:extensionElements>
@@ -178,6 +216,9 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="EndEvent_107gkee_di" bpmnElement="EndEvent_107gkee">
         <dc:Bounds x="492" y="212" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="468" y="255" width="87" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_1nn20sg_di" bpmnElement="SequenceFlow_1nn20sg">
         <di:waypoint x="408" y="230" />
@@ -255,13 +296,6 @@
         <di:waypoint x="1330" y="145" />
         <di:waypoint x="1330" y="212" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="EndEvent_1638qok_di" bpmnElement="EndEvent_1638qok">
-        <dc:Bounds x="1572" y="102" width="36" height="36" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="SequenceFlow_11kh8gd_di" bpmnElement="SequenceFlow_11kh8gd">
-        <di:waypoint x="1478" y="120" />
-        <di:waypoint x="1572" y="120" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ServiceTask_1tj9xvg_di" bpmnElement="ServiceTask_1tj9xvg">
         <dc:Bounds x="1120" y="190" width="100" height="80" />
       </bpmndi:BPMNShape>
@@ -274,6 +308,56 @@
         <di:waypoint x="1170" y="300" />
         <di:waypoint x="670" y="300" />
         <di:waypoint x="670" y="270" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_15mxn9r_di" bpmnElement="ServiceTask_15mxn9r">
+        <dc:Bounds x="1570" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0f60caa_di" bpmnElement="SequenceFlow_0f60caa">
+        <di:waypoint x="1478" y="120" />
+        <di:waypoint x="1570" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1d1cpjk_di" bpmnElement="SequenceFlow_1d1cpjk">
+        <di:waypoint x="1670" y="120" />
+        <di:waypoint x="1765" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EventBasedGateway_04nonoo_di" bpmnElement="ExclusiveGateway_0vsf3qh">
+        <dc:Bounds x="1765" y="95" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="IntermediateCatchEvent_1fha6fu_di" bpmnElement="IntermediateCatchEvent_1fha6fu">
+        <dc:Bounds x="1912" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1893" y="145" width="85" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0gnvma1_di" bpmnElement="SequenceFlow_0gnvma1">
+        <di:waypoint x="1815" y="120" />
+        <di:waypoint x="1912" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_0nrshdx_di" bpmnElement="EndEvent_0nrshdx">
+        <dc:Bounds x="2052" y="102" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2027" y="145" width="88" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_03demsq_di" bpmnElement="SequenceFlow_03demsq">
+        <di:waypoint x="1948" y="120" />
+        <di:waypoint x="2052" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="IntermediateCatchEvent_0kjjbpq_di" bpmnElement="IntermediateCatchEvent_0kjjbpq">
+        <dc:Bounds x="1772" y="212" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1687" y="220" width="62" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1trhmuu_di" bpmnElement="SequenceFlow_1trhmuu">
+        <di:waypoint x="1790" y="145" />
+        <di:waypoint x="1790" y="212" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1sqyfds_di" bpmnElement="SequenceFlow_1sqyfds">
+        <di:waypoint x="1790" y="248" />
+        <di:waypoint x="1790" y="300" />
+        <di:waypoint x="1190" y="300" />
+        <di:waypoint x="1190" y="270" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

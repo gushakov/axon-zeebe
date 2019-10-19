@@ -4,8 +4,7 @@ import lombok.Value;
 import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
 @Value
-public class BookCarCommand {
+public class BookFlightCommand {
     @TargetAggregateIdentifier
     private final String tripId;
-
 }

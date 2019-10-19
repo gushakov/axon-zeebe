@@ -1,14 +1,7 @@
 package com.github.axonzeebe.aggregate;
 
-import com.github.axonzeebe.core.command.BookCarCommand;
-import com.github.axonzeebe.core.command.BookHotelCommand;
-import com.github.axonzeebe.core.command.CancelCarCommand;
-import com.github.axonzeebe.core.command.CancelHotelCommand;
-import com.github.axonzeebe.core.event.CarBookedEvent;
-import com.github.axonzeebe.core.event.CarCancelledEvent;
-import com.github.axonzeebe.core.event.HotelBookedEvent;
-import com.github.axonzeebe.core.event.HotelCancelledEvent;
-import com.github.axonzeebe.workflow.WorkflowCommand;
+import com.github.axonzeebe.core.command.*;
+import com.github.axonzeebe.core.event.*;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.axonframework.commandhandling.CommandHandler;
@@ -37,11 +30,11 @@ public class TripBooking {
     public TripBooking() {
     }
 
-    // Handle generic workflow command message
+
     @CommandHandler
-    public TripBooking(WorkflowCommand command) {
+    public TripBooking(StartTripBookingCommand command) {
         log.debug("[Aggregate][Workflow Command] Process workflow command: {}", command);
-        AggregateLifecycle.apply(command.toWorkflowEvent());
+        AggregateLifecycle.apply(new TripBookingStartedEvent(command.getTripId()));
     }
 
     @CommandHandler
@@ -68,6 +61,18 @@ public class TripBooking {
         AggregateLifecycle.apply(new HotelCancelledEvent(command.getTripId()));
     }
 
+    @CommandHandler
+    public void handle(CancelFlightCommand command) {
+        log.debug("[Aggregate][Command] Cancel hotel: {}", command);
+        AggregateLifecycle.apply(new HotelCancelledEvent(command.getTripId()));
+    }
+
+    @EventHandler
+    public void on(TripBookingStartedEvent event) {
+        log.debug("[Aggregate][Event] Start trip booking: {}", event);
+        this.id = event.getTripId();
+    }
+
     @EventHandler
     public void on(CarBookedEvent event) {
         log.debug("[Aggregate][Event] Register car booking: {}", event);
@@ -81,6 +86,12 @@ public class TripBooking {
     }
 
     @EventHandler
+    public void on(FlightBookedEvent event) {
+        log.debug("[Aggregate][Event] Register flight booking: {}", event);
+        this.hotelBooked = true;
+    }
+
+    @EventHandler
     public void on(CarCancelledEvent event) {
         log.debug("[Aggregate][Event] Register car cancellation: {}", event);
         this.carBooked = false;
@@ -90,6 +101,12 @@ public class TripBooking {
     public void on(HotelCancelledEvent event) {
         log.debug("[Aggregate][Event] Register hotel cancellation: {}", event);
         this.hotelBooked = false;
+    }
+
+    @EventHandler
+    public void on(FlightCancelledEvent event) {
+        log.debug("[Aggregate][Event] Register flight cancellation: {}", event);
+        this.flightBooked = false;
     }
 
 }

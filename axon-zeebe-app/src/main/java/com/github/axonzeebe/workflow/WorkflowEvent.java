@@ -2,16 +2,17 @@ package com.github.axonzeebe.workflow;
 
 public interface WorkflowEvent {
 
-    default boolean isWorkflowStartingEvent() {
-        return false;
+    default String getProcessId() {
+        return TripBookingConstants.PROCESS_ID;
+    }
+
+    default String getCorrelationKey() {
+        return TripBookingConstants.CORRELATION_KEY;
     }
 
     String getWorkflowMessageName();
 
-    String getProcessId();
-
-    String getCorrelationKey();
-
     String getCorrelationValue();
 
+    boolean isWorkflowStartingEvent();
 }

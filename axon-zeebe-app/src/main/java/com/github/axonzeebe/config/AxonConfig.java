@@ -4,6 +4,8 @@ import org.axonframework.commandhandling.CommandBus;
 import org.axonframework.commandhandling.SimpleCommandBus;
 import org.axonframework.eventhandling.EventBus;
 import org.axonframework.eventhandling.SimpleEventBus;
+import org.axonframework.eventhandling.gateway.DefaultEventGateway;
+import org.axonframework.eventhandling.gateway.EventGateway;
 import org.axonframework.spring.messaging.unitofwork.SpringTransactionManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +29,11 @@ public class AxonConfig {
     @Bean
     public EventBus eventBus() {
         return SimpleEventBus.builder().build();
+    }
+
+    @Bean
+    public EventGateway eventGateway(){
+        return DefaultEventGateway.builder().eventBus(eventBus()).build();
     }
 
     // Do not need to declare JPA repositories, just annotating a domain class with @Aggregate

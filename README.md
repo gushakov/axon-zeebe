@@ -4,6 +4,13 @@ Axon and Zeebe
 Proof-of-concept integration of [Zeebe](https://docs.zeebe.io/introduction/quickstart.html) workflow
 engine from Camunda with [Axon](https://axoniq.io/) CQRS engine.
 
+The idea is to use Zeebe workflow engine instead of Sagas in Axon. Example goes through a familiar scenario
+of a trip booking. Workflow is used to model the sequence of events: book a car, book a hotel, book a flight
+and the sequence of compensating events: cancel flight, cancel hotel, cancel flight.
+
+The advantage of this approach is that long business process can be modeled visually with Zebee's BPMN modeler,
+and also that there is a convenient monitoring of each worflow instance state through Zeebe's Simple monitor. 
+
 Running
 ---
 
