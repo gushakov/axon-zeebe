@@ -15,10 +15,10 @@
 
 /usr/local/bin/startup.sh &
 
-sleep 30s
+sleep 10s
 
 dockerize -wait http://monitor:8080 -timeout 60s
 
-/zbctl deploy /trip-saga.bpmn &
+/zbctl --insecure deploy /trip-saga.bpmn &
 
 tail -f /dev/null

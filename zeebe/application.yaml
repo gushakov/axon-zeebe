@@ -1,0 +1,8 @@
+# from https://github.com/zeebe-io/zeebe-hazelcast-exporter/blob/master/docker/application.yaml
+
+zeebe:
+  broker:
+    exporters:
+      hazelcast:
+        className: io.zeebe.hazelcast.exporter.HazelcastExporter
+        jarPath: exporters/zeebe-hazelcast-exporter-jar-with-dependencies.jar
