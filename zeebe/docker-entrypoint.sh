@@ -17,8 +17,6 @@
 
 sleep 10s
 
-dockerize -wait http://monitor:8080 -timeout 60s
-
-/zbctl --insecure deploy /trip-saga.bpmn &
+/usr/local/zeebe/bin/zbctl --insecure deploy /trip-saga.bpmn &
 
 tail -f /dev/null

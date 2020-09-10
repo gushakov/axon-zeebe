@@ -12,36 +12,25 @@ services:
     ports:
       - "26500:26500"
       - "5701:5701"
-#    volumes:
-#      - ./zeebe/zeebe.cfg.toml:/usr/local/zeebe/conf/zeebe.cfg.toml
-
-#  zeebe:
-#    image: camunda/zeebe-with-hazelcast-exporter:latest
-#    container_name: zeebe
-#    ports:
-#      - "26500:26500"
-#      - "5701:5701"
-#    volumes:
-#      - ./zeebe/zeebe.cfg.toml:/usr/local/zeebe/conf/zeebe.cfg.toml
 
   monitor:
-    container_name: zeebe_monitor
+    container_name: monitor
     image: camunda/zeebe-simple-monitor:latest
     environment:
       - zeebe.client.broker.contactPoint=zeebe:26500
       - zeebe.client.worker.hazelcast.connection=zeebe:5701
     ports:
-      - "8080:8080"
+      - "8082:8082"
     depends_on:
         - zeebe
 
-#  app:
-#    container_name: app
-#    build:
-#      context: ./axon-zeebe-app
-#    environment:
-#      - ZEEBE_BROKER_HOST=zeebe
-#    ports:
-#      - "8081:8081"
-#    depends_on:
-#        - zeebe
+  app:
+    container_name: app
+    build:
+      context: ./axon-zeebe-app
+    environment:
+      - ZEEBE_BROKER_HOST=zeebe
+    ports:
+      - "8081:8081"
+    depends_on:
+        - zeebe
