@@ -19,7 +19,7 @@
         <axon.version>4.1.1</axon.version>
         <axon.amqp.version>4.1</axon.amqp.version>
         <spring.boot.version>2.1.4.RELEASE</spring.boot.version>
-        <springfox.swagger2.version>2.9.2</springfox.swagger2.version>
+        <springfox.swagger2.version>2.10.0</springfox.swagger2.version>
         <spring.zeebe.starter.version>0.6.0</spring.zeebe.starter.version>
     </properties>
 
